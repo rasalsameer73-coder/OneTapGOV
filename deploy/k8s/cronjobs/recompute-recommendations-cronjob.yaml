@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: recompute-recommendations
+  namespace: default
+spec:
+  schedule: "0 3 * * *" # daily at 03:00 UTC - adjust as needed
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: recompute
+              image: your-registry/onetap-backend:latest
+              imagePullPolicy: IfNotPresent
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  # Example: run shard 0 of 4 with concurrency 50
+                  python -m app.workers.recompute_recommendations 0 4 50
+              env:
+                - name: DATABASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: postgres-credentials
+                      key: database_url
+                - name: REDIS_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: redis-credentials
+                      key: redis_url
+                - name: PUSHGATEWAY_URL
+                  value: "http://pushgateway.monitoring.svc:9091"
+                - name: SENTRY_DSN
+                  valueFrom:
+                    secretKeyRef:
+                      name: sentry-credentials
+                      key: dsn
+              resources:
+                requests:
+                  cpu: "500m"
+                  memory: "512Mi"
+                limits:
+                  cpu: "2000m"
+                  memory: "2Gi"
+          # set serviceAccount if DB access requires extra creds
+*** End Patch

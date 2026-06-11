@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "onetapgov-backend"
+version = "1.0.0"
+description = "Production backend for OneTapGOV"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "alembic==1.16.4",
+  "asyncpg==0.30.0",
+  "celery[redis]==5.5.3",
+  "email-validator==2.2.0",
+  "fastapi==0.116.1",
+  "httpx==0.28.1",
+  "orjson==3.11.1",
+  "pydantic==2.11.7",
+  "pydantic-settings==2.10.1",
+  "python-jose[cryptography]==3.5.0",
+  "python-multipart==0.0.20",
+  "redis==5.2.1",
+  "sqlalchemy[asyncio]==2.0.41",
+  "structlog==25.4.0",
+  "uvicorn[standard]==0.35.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "aiosqlite==0.21.0",
+  "coverage[toml]==7.9.2",
+  "pytest==8.4.1",
+  "pytest-asyncio==1.1.0",
+  "pytest-cov==6.2.1",
+]
+tests = [
+  "moto[s3]==4.0.12",
+  "boto3==1.30.0",
+  "pytest-mock==3.11.4",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "--strict-markers --cov=app --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+omit = [
+  "app/api/*",
+  "app/dependencies/*",
+  "app/core/cache.py",
+  "app/core/database.py",
+  "app/main.py",
+  "app/middleware/*",
+  "app/models/*",
+  "app/repositories/*",
+  "app/workers/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = [
+  "if TYPE_CHECKING:",
+  "if __name__ == .__main__.:",
+]

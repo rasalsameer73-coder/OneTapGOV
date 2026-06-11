@@ -1,0 +1,26 @@
+Metadata-Version: 2.4
+Name: onetapgov-backend
+Version: 1.0.0
+Summary: Production backend for OneTapGOV
+Requires-Python: <3.13,>=3.12
+Requires-Dist: alembic==1.16.4
+Requires-Dist: asyncpg==0.30.0
+Requires-Dist: celery[redis]==5.5.3
+Requires-Dist: email-validator==2.2.0
+Requires-Dist: fastapi==0.116.1
+Requires-Dist: httpx==0.28.1
+Requires-Dist: orjson==3.11.1
+Requires-Dist: pydantic==2.11.7
+Requires-Dist: pydantic-settings==2.10.1
+Requires-Dist: python-jose[cryptography]==3.5.0
+Requires-Dist: python-multipart==0.0.20
+Requires-Dist: redis==5.2.1
+Requires-Dist: sqlalchemy[asyncio]==2.0.41
+Requires-Dist: structlog==25.4.0
+Requires-Dist: uvicorn[standard]==0.35.0
+Provides-Extra: dev
+Requires-Dist: aiosqlite==0.21.0; extra == "dev"
+Requires-Dist: coverage[toml]==7.9.2; extra == "dev"
+Requires-Dist: pytest==8.4.1; extra == "dev"
+Requires-Dist: pytest-asyncio==1.1.0; extra == "dev"
+Requires-Dist: pytest-cov==6.2.1; extra == "dev"
