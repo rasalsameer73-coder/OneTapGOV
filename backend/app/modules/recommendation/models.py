@@ -1,0 +1,1 @@
+"""Recommendations models placeholder."""

@@ -3,3 +3,4 @@ backend/.venv/
 **/__pycache__/
 *.py[cod]
 backend/tmp_*.py
+backend/.env
