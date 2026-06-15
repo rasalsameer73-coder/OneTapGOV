@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../../lib/supabaseClient'
+import ChatAssistant from './ChatAssistant'
 
 export default function Dashboard() {
   const [name, setName] = useState('')
@@ -38,22 +39,14 @@ export default function Dashboard() {
   }
   
   return(
-    <div style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1> Hi, {name} </h1>
-        <button 
-          onClick={handleLogout}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#ff4444',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          Logout
-        </button>
+    <div className="min-h-screen bg-gray-100">
+
+      <span className="text-gray-700 font-medium">Welcome, {name || 'User'}</span>
+      <button onClick={handleLogout} className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+        Logout</button>
+
+      <div className="lg:col-span-2">
+        <ChatAssistant />
       </div>
     </div>
   )

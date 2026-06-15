@@ -10,3 +10,4 @@ class BasicProfile(BaseModel):
     district: Optional[str] = None
     income: Optional[float] = None
     category: Optional[str] = None
+    sector: Optional[str] = None

@@ -5,7 +5,8 @@ BASIC_FIELDS = [
     "state",
     "district",
     "income",
-    "category"
+    "category",
+    "sector"
 ]
 
 FIELD_DESCRIPTIONS = {
@@ -15,5 +16,6 @@ FIELD_DESCRIPTIONS = {
     "state": "the state they live in",
     "district": "their district",
     "income": "their annual family income",
-    "category": "their social category (e.g., General, OBC, SC, ST)"
+    "category": "their social category (e.g., General, OBC, SC, ST)",
+    "sector": "their sector or category (choose from: Farmer, Student, Women)"
 }
