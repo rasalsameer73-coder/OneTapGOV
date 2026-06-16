@@ -22,10 +22,6 @@ if not os.getenv("SUPABASE_URL") and not os.getenv("NEXT_PUBLIC_SUPABASE_URL"):
     else:
         load_dotenv(dotenv_path=Path(__file__).with_name(".env"), encoding="utf-16")
 
-# Import chat router from the backend package
-from backend.api import chat
-
-
 app = FastAPI(
     title=settings.PROJECT_NAME,
     lifespan=lifespan,
@@ -41,7 +37,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(chat.router)
+# Mount backend chat router only when Supabase envs are available to avoid import-time failures
+if os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL"):
+    try:
+        from backend.api import chat
+
+        app.include_router(chat.router)
+    except Exception:
+        # If importing backend chat fails, log and continue without it.
+        import logging
+
+        logging.getLogger("app").exception("Failed to include backend.chat router; continuing without Supabase-backed routes.")
+else:
+    import logging
+
+    logging.getLogger("app").info("SUPABASE envs not found; skipping backend.chat router mount.")
 
 
 @app.get("/")

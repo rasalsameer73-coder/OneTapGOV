@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status
+from app.core.logger import logger as struct_logger
 
 from app.core.jwt import create_access_token
 from app.core.security import (
@@ -53,14 +54,35 @@ class AuthService:
         user = await self.repository.get_by_email(
             user_data.email
         )
+        # Debug logging to help investigate failed logins.
+        # Avoid logging plain passwords. Log whether user exists and verification result.
+        if not user:
+            struct_logger.info("Login attempt for unknown email", email=user_data.email)
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid credentials",
+            )
 
-        if (
-            not user
-            or not verify_password(
+        try:
+            verified = verify_password(
                 user_data.password,
                 user.hashed_password,
             )
-        ):
+        except Exception as e:
+            struct_logger.exception("Error verifying password", email=user_data.email, error=str(e))
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid credentials",
+            )
+
+        struct_logger.info(
+            "Login attempt",
+            email=user_data.email,
+            user_found=True,
+            password_verified=verified,
+        )
+
+        if not verified:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid credentials",
